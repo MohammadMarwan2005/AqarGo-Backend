@@ -136,44 +136,36 @@ class AdService
         return ['ad'=>$ad,'message'=>$message,'code'=>$code];
 
     }
-    public function create($request) :array
+    public function create($request) : array
     {
+        $user = auth()->user();
+        $adsCount = $user->ads()->where('is_active', true)->count();
 
-         $user=auth()->user();
-         $adsCount=$user->ads()->where('is_active',true)->count();
+        if ($user->hasRole('client') && $adsCount >= 3) {
+            return ['ad' => null, 'message' => 'you have to upgrade your acount to have +3 ads activated', 'code' => 403];
+        } else if ($user->hasRole('premium_client') && $adsCount >= 25) {
+            return ['ad' => null, 'messsage' => 'u cant have +25 ads activated', 'code' => 403];
+        }
 
+        $start_date = Carbon::now();
+        $end_date = now()->addDays(3);
 
-         if($user->hasRole('client') && $adsCount>=3)
-         {
-             return ['ad'=>null,'message'=>'you have to upgrade your acount to have +3 ads activated','code'=>403];
-         }
-         else if($user->hasRole('premium_client') && $adsCount>=25)
-         {
-             return ['ad'=>null,'messsage'=>'u cant have +25 ads activated','code'=>403];
-         }
+        $ad = Ad::query()->create([
+            'property_id' => $request['property_id'],
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ]);
 
-        $start_date=Carbon::now();
-       $end_date=now()->addDays(3);
+        $ad->property()->update(['is_ad' => true]);
+        $ad = Ad::query()->with(['property.images', 'property.propertyable'])->find($ad->id);
+        $ad = $this->format($ad);
 
-       $ad=Ad::query()->create([
-           'property_id'=>$request['property_id'],
-          'start_date'=>$start_date,
-          'end_date'=>$end_date,
-       ]);
+        // pass the created ad into the notifier (immediate) or dispatch a job here
+        $this->sendfornotifyme($ad);
 
-       $ad->property()->update(['is_ad'=>true]);
-       $ad=Ad::query()->with(['property.images','property.propertyable'])->find($ad->id);
-
-       $ad=$this->format($ad);
-
-       //CheckNotifyMeJob::dispatch();
-        $this->sendfornotifyme();
-
-       $message='ad created successfully';
-       $code=200;
-       return ['ad'=>$ad,'message'=>$message,'code'=>$code];
-
+        return ['ad' => $ad, 'message' => 'ad created successfully', 'code' => 200];
     }
+
     public function activate($id ):array
     {
         $ad=Ad::query()->find($id);
@@ -644,33 +636,93 @@ class AdService
         return ['ads'=>$ads,'message'=>'similar ads','code'=>200];
 
     }
-    public function notifyme($request)
+    // In AdService.php
+    public function notifyme(array $filters)
     {
-      $not=NotifyMe::query()->create(['user_id'=>auth('api')->id(),
-          'filters'=>$request
-      ]);
-      return ['notifyme'=>$not,'message'=>'ok','code'=>200];
+        $filtersString = json_encode($filters);
+
+        $not = NotifyMe::query()->create([
+            'user_id' => auth('api')->id(),
+            'filters' => $filtersString,
+        ]);
+
+        return [
+            'notifyme' => $not,
+            'message' => 'ok',
+            'code' => 200
+        ];
     }
-    public function sendfornotifyme()
+
+    public function sendfornotifyme(Ad $ad)
     {
-      $nots=NotifyMe::query()->get();
+        // for scale, use chunking; for simplicity:
+        $nots = NotifyMe::query()->get();
 
-      foreach($nots as $not)
-      {
-          $res=$this->querySearch($not->filters)->latest()->first();
+        foreach ($nots as $not) {
+            $filters = $this->normalizeFiltersString($not->filters);
 
-          if($res)
-          {
-              $user=User::query()->find($not->user_id);
-              // ارسل ايميل
-              $fcm=new FcmService();
-              $fcm->sendNotification($user->fcm_token,'New property matches your search',
-                  'Some one added a property that matches your previous search.',[
-                  'ad'=>json_encode($res),
-              ],$res->id,$not->user_id);
-          }
-      }
+            // Approach A (recommended): reuse your existing querySearch builder but limit to this ad id
+            // Assumption: querySearch($filters) returns a Builder targeting ads (or properties) and is chainable
+            $query = $this->querySearch($filters);
 
+            // adapt column name if querySearch returns property builder; adjust 'id' -> correct table id if needed
+            $matchesThisAd = (bool) $query->where('ads.id', $ad->id)->exists();
+
+            // if your querySearch returns Ad builder with 'id' column, you can use:
+            // $matchesThisAd = (bool) $query->where('id', $ad->id)->exists();
+
+            if ($matchesThisAd) {
+                $user = User::query()->find($not->user_id);
+                if (!$user || empty($user->fcm_token)) {
+                    continue; // skip users without valid token
+                }
+
+                try {
+                    $fcm = new FcmService();
+                    // send minimal payload (ad id + few fields) — client can fetch full ad if needed
+                    $payload = [
+                        'ad_id' => $ad->id,
+                        'title' => $ad->property->title ?? null,
+                    ];
+
+                    $fcm->sendNotification(
+                        $user->fcm_token,
+                        'New property matches your search',
+                        'A property was added that matches your previous search.',
+                        $payload,
+                        $ad->id,
+                        $user->id
+                    );
+                } catch (\Throwable $e) {
+                    \Log::error("FCM send failed for user {$not->user_id}: {$e->getMessage()}");
+                    // continue processing other notify rows
+                }
+            }
+        }
     }
+
+    protected function normalizeFiltersString($filtersString) : array
+    {
+        // if already array, return as-is
+        if (is_array($filtersString)) return $filtersString;
+
+        if (empty($filtersString)) return [];
+
+        // Try JSON decode (what we store now)
+        $decoded = json_decode($filtersString, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+
+        // Fallback: parse query-string (in case older rows were saved differently)
+        parse_str($filtersString, $parsed);
+        if (!empty($parsed)) {
+            return $parsed;
+        }
+
+        // Last fallback: return raw string under a key so querySearch can handle it if needed
+        return ['raw' => $filtersString];
+    }
+
 
 }
