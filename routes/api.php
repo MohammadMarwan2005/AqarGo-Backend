@@ -22,6 +22,23 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
+
+Route::get('/telegram/link', function () {
+    return response()->json([
+        'status' => 200,
+        'data' => 'https://t.me/aqargo',
+        'message' => 'Telegram link fetched successfully',
+    ], 200);
+});
+
+Route::get('/telegram/username', function () {
+    return response()->json([
+        'status' => 200,
+        'data' => 'aqargo',
+        'message' => 'Telegram username fetched successfully',
+    ], 200);
+});
+
 Route::get('/user', function (Request $request) {
 //    return $request->user();
    // $user=\App\Models\User::findOrFail(1);
