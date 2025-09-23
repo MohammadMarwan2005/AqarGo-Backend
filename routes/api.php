@@ -31,6 +31,19 @@ Route::get('/telegram/link', function () {
     ], 200);
 });
 
+
+Route::get('/links', function () {
+    return response()->json([
+        'status' => 200,
+        'data' => [
+            'telegram' => 'https://t.me/aqargo',
+            'github' => 'https://github.com/MohammadMarwan2005/aqar-go',
+        ],
+        'message' => 'Links fetched successfully',
+    ], 200);
+});
+
+
 Route::get('/telegram/username', function () {
     return response()->json([
         'status' => 200,
