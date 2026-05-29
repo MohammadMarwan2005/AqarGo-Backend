@@ -178,7 +178,7 @@ Route::controller(\App\Http\Controllers\PropertyController::class)->prefix('prop
             Route::post('recommend','recommend')
                 ->withoutMiddleware([VerifiedEmail::class,JwtMiddleware::class,BlockedUser::class]) ->name('recommend');
             Route::post('similarTo/{id}','similarTo')
-                ->withoutMiddleware([VerifiedEmail::class,JwtMiddleware::class,BlockedUser::class]) ->name('recommend');
+                ->withoutMiddleware([VerifiedEmail::class,JwtMiddleware::class,BlockedUser::class]) ->name('similarTo');
             Route::post('notifyme','notifyme')->name('notifyme');
         });
 
