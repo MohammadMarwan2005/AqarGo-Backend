@@ -1,0 +1,3227 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "AqarGo API",
+        "description": "AqarGo real estate platform API documentation",
+        "contact": {
+            "email": "support@aqargo.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8001",
+            "description": "Local server"
+        }
+    ],
+    "paths": {
+        "/api/ad/index": {
+            "get": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "List all ads",
+                "operationId": "cd713bd25235cb0acc46d40318ac5a49",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/ad/getUserAds": {
+            "post": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Get ads belonging to a specific user",
+                "operationId": "dadb5ef8b3c1aeb160ff2b076365858a",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ad/show/{id}": {
+            "get": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Show a single ad",
+                "operationId": "2cec7e229f4fca8a6d78e7da2f6061af",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/ad/activate/{id}": {
+            "get": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Activate an ad",
+                "operationId": "09bd9385364a9abec62bf9ee3ebfdeb7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ad/create": {
+            "post": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Create a new ad for a property",
+                "operationId": "53f00ec7c74399d80921f41341e3cc44",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "property_id"
+                                ],
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ad/getAdsByPropertyType": {
+            "post": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Get ads filtered by property type",
+                "operationId": "9008cd967d40d7913a7e5c6db2c5ffd6",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "apartment",
+                                            "land",
+                                            "office",
+                                            "shop"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/ad/activateSelectedAds": {
+            "post": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Activate multiple ads at once (admin)",
+                "operationId": "f260dc001ea547fccbfe4a6de54f00ca",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "all": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "ads": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ad/unactivate/{id}": {
+            "get": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Deactivate an ad",
+                "operationId": "b3197d155ac183f165671c3cdb9cac87",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ad/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Delete an ad",
+                "operationId": "554393e35a4baebb87885f9aa2ee2e6e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ad/nearToYou": {
+            "post": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Get ads near a given location",
+                "operationId": "6ee87a6a1f851751e751cad326da77d8",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 33.5138
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 36.2765
+                                    },
+                                    "radius": {
+                                        "type": "number",
+                                        "example": 10
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/ad/search": {
+            "post": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Search ads with filters",
+                "operationId": "8ab7fcb4424a5b4b09a17263f352db94",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "apartment",
+                                            "land",
+                                            "office",
+                                            "shop"
+                                        ]
+                                    },
+                                    "min_price": {
+                                        "type": "number",
+                                        "example": 50000
+                                    },
+                                    "max_price": {
+                                        "type": "number",
+                                        "example": 200000
+                                    },
+                                    "min_area": {
+                                        "type": "number",
+                                        "example": 50
+                                    },
+                                    "max_area": {
+                                        "type": "number",
+                                        "example": 300
+                                    },
+                                    "num": {
+                                        "type": "integer",
+                                        "example": 10
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/ad/recommend": {
+            "post": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Get recommended ads",
+                "operationId": "766d9ee3f7e4ae9169c7bca1ea4209e4",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/ad/similarTo/{id}": {
+            "post": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Get ads similar to a given ad",
+                "operationId": "e731b887ededb5dabfeb64727aeb1b29",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/ad/notifyme": {
+            "post": {
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Subscribe to notifications for matching ads",
+                "operationId": "d8e83a22911f74f862bc7fd386bf23c3",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "apartment",
+                                            "land",
+                                            "office",
+                                            "shop"
+                                        ]
+                                    },
+                                    "min_price": {
+                                        "type": "number",
+                                        "example": 50000
+                                    },
+                                    "max_price": {
+                                        "type": "number",
+                                        "example": 200000
+                                    },
+                                    "min_area": {
+                                        "type": "number",
+                                        "example": 50
+                                    },
+                                    "max_area": {
+                                        "type": "number",
+                                        "example": 300
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "operationId": "d764dd091cc4494ae0baf360b03319f3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password",
+                                    "password_confirmation",
+                                    "phone_number"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Ahmad"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Ali"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "ahmad@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123",
+                                        "minLength": 8
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "0912345678"
+                                    },
+                                    "fcm_token": {
+                                        "type": "string",
+                                        "example": "fcm_token_here"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login and get JWT token",
+                "operationId": "8dcb70df1020986038d098cc08d05dae",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "ahmad@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123",
+                                        "minLength": 8
+                                    },
+                                    "fcm_token": {
+                                        "type": "string",
+                                        "example": "fcm_token_here"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout the authenticated user",
+                "operationId": "69281b12abb272c76871f19cb17ca563",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh the JWT token",
+                "operationId": "b2eae7a8032954d25b46c7ec6f489c68",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/me": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get the authenticated user's info",
+                "operationId": "f0b15943f55143d36f606a2dbd1d2366",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/forgetPassword": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send password reset code to email",
+                "operationId": "a596bf0086d25bea6b3721256d06add1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "ahmad@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/auth/checkCode": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify the password reset code",
+                "operationId": "715451e030d64688fd5ab7c760063d85",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "code"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "ahmad@example.com"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/auth/resetPassword": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset the user's password",
+                "operationId": "ed3326bc53cbcc940f34d8b4048a745d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "ahmad@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "newpassword123",
+                                        "minLength": 8
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "newpassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/block/create": {
+            "post": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "Block a user",
+                "operationId": "81a089881ccfe9d2cf3a3da9958ac949",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "blocked_id"
+                                ],
+                                "properties": {
+                                    "blocked_id": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "reason": {
+                                        "type": "string",
+                                        "example": "Spam"
+                                    },
+                                    "days": {
+                                        "type": "integer",
+                                        "example": 7
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/block/unblock/{id}": {
+            "delete": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "Unblock a user",
+                "operationId": "25eb4cd2e620b7d28c5d8d259bd013f8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Block ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/block/index": {
+            "get": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "List the authenticated user's blocks",
+                "operationId": "18e4f6ebaa89f19f4cf6feb0f923d2ac",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/favorites": {
+            "get": {
+                "tags": [
+                    "Favorites"
+                ],
+                "summary": "Get the authenticated user's favorite ads",
+                "operationId": "81123175f76259d611e2c337477dfa5f",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/favorites/{id}": {
+            "get": {
+                "tags": [
+                    "Favorites"
+                ],
+                "summary": "Check if an ad is in favorites",
+                "operationId": "41bfc8b78062a37acc6a37516f0daf6a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Ad ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Favorites"
+                ],
+                "summary": "Add an ad to favorites",
+                "operationId": "21747cae3ce4e086520b3daa67fbadc6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Ad ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Favorites"
+                ],
+                "summary": "Remove an ad from favorites",
+                "operationId": "d0c793b28205da0bd6d930768e2c31a1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Ad ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/fcm/send": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Send a push notification to a single device",
+                "operationId": "0ad8216bdb87b90db7d5582406804980",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "device_token": {
+                                        "type": "string",
+                                        "example": "fcm_device_token"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "New message"
+                                    },
+                                    "body": {
+                                        "type": "string",
+                                        "example": "You have a new notification"
+                                    },
+                                    "ad_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "data": {
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/fcm/send-all": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Send a push notification to all users",
+                "operationId": "55b810d642ed26d94a1ca48fc45193a6",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Announcement"
+                                    },
+                                    "body": {
+                                        "type": "string",
+                                        "example": "Broadcast message"
+                                    },
+                                    "ad_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "data": {
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/fcm/notifications": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get all notifications for the authenticated user",
+                "operationId": "00b5d09c45b81255238094bde5a980bf",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/fcm/notifications/read": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get read notifications",
+                "operationId": "9e3cd35d2252b3e3914b0682c7ef73c2",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/fcm/notifications/unread": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get unread notifications",
+                "operationId": "0cca168a56855edcc07a262752a7b122",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/fcm/notifications/unread-count": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get count of unread notifications",
+                "operationId": "e12b758e51b6887b575d863db81820a4",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/plans": {
+            "get": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "List all plans",
+                "operationId": "72a21e2f57730b17bc379570c2355d3d",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Create a new plan (admin)",
+                "operationId": "79d6cf1dd03dbdb2c5dfc0150a8a42ed",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "features",
+                                    "duration",
+                                    "type",
+                                    "price"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Gold Plan"
+                                    },
+                                    "features": {
+                                        "type": "string",
+                                        "example": "Unlimited ads, priority listing"
+                                    },
+                                    "duration": {
+                                        "type": "integer",
+                                        "example": 30
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "monthly",
+                                            "yearly"
+                                        ]
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 9.99
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/plans/{id}": {
+            "get": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Get a single plan",
+                "operationId": "063d7257065f906f920271f5cb525618",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Update a plan (admin)",
+                "operationId": "687c9b778e26d52e1e8dfe9fcf6b50a3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Gold Plan"
+                                    },
+                                    "features": {
+                                        "type": "string",
+                                        "example": "Unlimited ads"
+                                    },
+                                    "duration": {
+                                        "type": "integer",
+                                        "example": 30
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "monthly",
+                                            "yearly"
+                                        ]
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 9.99
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Delete a plan (admin)",
+                "operationId": "b607095aa75464cd9286150f1dca0c3b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/plans/yearly_plans": {
+            "get": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Get all yearly plans",
+                "operationId": "5fd4b793b3f3f0e9505b2cbd74ef6f65",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/plans/monthly_plans": {
+            "get": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Get all monthly plans",
+                "operationId": "0a0bf346d928181d260038d769d268fc",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/getMyProfile": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get the authenticated user's profile",
+                "operationId": "db28461030543940c6a698455e9ab6be",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/show/{id}": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Show another user's profile",
+                "operationId": "1604e81f23f9a108f1910010507e465a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/create": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Create a user profile",
+                "operationId": "3a6e92ec358def9e9e7fbc3456617226",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Ahmad"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Ali"
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "0912345678"
+                                    },
+                                    "image_url": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "enum": [
+                                            "male",
+                                            "female"
+                                        ]
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 33.51
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 36.27
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Damascus, Syria"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/update": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update the authenticated user profile",
+                "operationId": "658523cb93a6af7d87e1ca8740b514f5",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Ahmad"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Ali"
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "0912345678"
+                                    },
+                                    "image_url": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "enum": [
+                                            "male",
+                                            "female"
+                                        ]
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 33.51
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 36.27
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Damascus, Syria"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/delete": {
+            "delete": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Delete the authenticated user profile",
+                "operationId": "785571e5bd10f54bc9556293d98cf3e2",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/property/getProperty/{id}": {
+            "get": {
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Get a single property by ID",
+                "operationId": "5b77b20ab04e3190f9dc9774b7cd5181",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/property/getUserProperties": {
+            "get": {
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Get the authenticated user's properties",
+                "operationId": "9b8bc86a74a3cb7237649c48b93150ae",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/property/create": {
+            "post": {
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Create a new property",
+                "operationId": "731650a375b818372c1c399d42fbbef4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "apartment",
+                                            "land",
+                                            "office",
+                                            "shop"
+                                        ]
+                                    },
+                                    "property": {
+                                        "properties": {
+                                            "area": {
+                                                "type": "number",
+                                                "example": 120
+                                            },
+                                            "price": {
+                                                "type": "number",
+                                                "example": 150000
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/property/update/{id}": {
+            "post": {
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Update a property",
+                "operationId": "8e7b1f645846dfaeb5aafca50de6d42a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "apartment",
+                                            "land",
+                                            "office",
+                                            "shop"
+                                        ]
+                                    },
+                                    "property": {
+                                        "properties": {
+                                            "area": {
+                                                "type": "number",
+                                                "example": 120
+                                            },
+                                            "price": {
+                                                "type": "number",
+                                                "example": 150000
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/property/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Delete a property",
+                "operationId": "1fab96d35454eea3a564e6f9a8f17528",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/property/getAttributes": {
+            "post": {
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Get available attributes for a property type",
+                "operationId": "e8e7cbfcd9cff1f5b0f2fafb7221e3c7",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "apartment",
+                                            "land",
+                                            "office",
+                                            "shop"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/report/index": {
+            "post": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "List all reports (admin)",
+                "operationId": "7aaabb10d9e0692e53df28f3f08e06b0",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/report/create": {
+            "post": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Submit a report against an ad",
+                "operationId": "a5367b1dc6eb8808a6204c35304d18ac",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ad_id"
+                                ],
+                                "properties": {
+                                    "ad_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "reason": {
+                                        "type": "string",
+                                        "example": "spam",
+                                        "enum": [
+                                            "sexual_content",
+                                            "harassment",
+                                            "spam",
+                                            "hate_speech",
+                                            "violence",
+                                            "scam",
+                                            "fake_information",
+                                            "other"
+                                        ]
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "This ad seems fraudulent"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/report/show/{id}": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get a report by ID",
+                "operationId": "7627dca2e567d7f031c660b51aa175f2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/report/showAdReports": {
+            "post": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get all reports for a specific ad",
+                "operationId": "c7d4123740e681999e658ce3094892e2",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "ad_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/report/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Delete a report (admin)",
+                "operationId": "7508ddda5116084541a92c4a171941ed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "List all reviews (admin)",
+                "operationId": "346169ce6ab0c633530a7cedc1a25fab",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Create a review for an ad",
+                "operationId": "4c185fda015ad9617584269109afa248",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ad_id",
+                                    "rating"
+                                ],
+                                "properties": {
+                                    "ad_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "rating": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 4.5,
+                                        "maximum": 5,
+                                        "minimum": 0
+                                    },
+                                    "comment": {
+                                        "type": "string",
+                                        "example": "Great property!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reviews/{id}": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get a single review",
+                "operationId": "a9949d3a965ed93ae30547c07eef7505",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Update a review",
+                "operationId": "86ab7645901f456f43f875174ba762c1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "rating": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 4,
+                                        "maximum": 5,
+                                        "minimum": 0
+                                    },
+                                    "comment": {
+                                        "type": "string",
+                                        "example": "Updated comment"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Delete a review (admin)",
+                "operationId": "89986343b5dbd2b909c2764aeb7e4096",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/client/reviews/{id}": {
+            "delete": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Delete own review (client)",
+                "operationId": "cf123127f1447a0dd1b7a46c5389d99f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ad/{ad_id}/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get all reviews for a specific ad",
+                "operationId": "12bc18cf082cbb9d41ea4484aa156283",
+                "parameters": [
+                    {
+                        "name": "ad_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api/user/ad/{ad_id}/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get the authenticated user's reviews for an ad",
+                "operationId": "0870739d840931eef6e687b920dd78f4",
+                "parameters": [
+                    {
+                        "name": "ad_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/activated/admin": {
+            "get": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Get all active subscriptions (admin)",
+                "operationId": "43b8140c171bea9e149e77d86d1cdff1",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/deactivate/{id}/admin": {
+            "put": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Deactivate a subscription (admin)",
+                "operationId": "c7d6c922dff1d4bbed5578795f5097dd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/admin": {
+            "get": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "List all subscriptions (admin)",
+                "operationId": "abc2be4fe33691c5b213664045b93fe9",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/{id}/admin": {
+            "get": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Get a subscription by ID (admin)",
+                "operationId": "e212c1f4258182ca561a19875612c542",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Delete a subscription (admin)",
+                "operationId": "28ead92aa4eb08b1f5f2fdf15b2b44e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/active/client": {
+            "get": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Get the authenticated user's active subscription",
+                "operationId": "34a5f9c3290df162e67c414342c61625",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/deactivate/client": {
+            "put": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Deactivate the authenticated user's subscription",
+                "operationId": "b90fbebcfad293e7c05a38158daac67a",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/client": {
+            "get": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "List the authenticated user's subscriptions",
+                "operationId": "dc0dafca472033b5cfd77ce1ca43e236",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Subscribe to a plan",
+                "operationId": "124618e807a85080044f71f398a42a2f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "plan_id"
+                                ],
+                                "properties": {
+                                    "plan_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/{id}/client": {
+            "get": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Get a specific subscription of the authenticated user",
+                "operationId": "7d39dd6a71bb2c40eb5d9ef470eb2e0c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/time_remaining/{id}/client": {
+            "get": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Get remaining time for a subscription",
+                "operationId": "57de6eecb10b8a1093a0c0ef6cb44417",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/getUserByEmail": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Find a user by email address",
+                "operationId": "fa4640ee985ba8a8f6010db068a0d527",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/getUsers": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "List all users (admin)",
+                "operationId": "fea6d63d0ad47515486d03db2c005f7b",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/show/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a user by ID",
+                "operationId": "2b30a909c4a477d70238155e0eb6569d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/create": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new user (admin)",
+                "operationId": "a286e80786abff27a4c441322a18d3e4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Ahmad"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Ali"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123",
+                                        "minLength": 8
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "0912345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/update/{id}": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update a user",
+                "operationId": "a7d9dc19debe3941b761cf80a07967ba",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Ahmad"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Ali"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "0912345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete a user",
+                "operationId": "892733a82d62df86b0731adbc2db048a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/upgradeToPremium/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Upgrade a user to premium (admin)",
+                "operationId": "cd202c202132b62d2d0c4c9f8e272a8d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/assignUserRole": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Assign a role to a user (admin)",
+                "operationId": "6b7a8beaddfd0520908788b2bebee3fc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "example": "admin"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/upgrade": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Upgrade the authenticated user to premium",
+                "operationId": "f0475db82aac5242785c125366994527",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/downgrade": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Downgrade the authenticated user from premium",
+                "operationId": "dd02e0e93634946f83e994f6edd5ab24",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/extra_info": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get extra info for the authenticated user",
+                "operationId": "af842dec5d2f69839cd0fa79aa885f27",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "SuccessResponse": {
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "data": {
+                        "type": "object"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ErrorResponse": {
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "data": {
+                        "type": "object"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationErrorResponse": {
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "data": {
+                        "type": "object"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Validation Error."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Enter your JWT token"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Ads",
+            "description": "Ads"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Block",
+            "description": "Block"
+        },
+        {
+            "name": "Favorites",
+            "description": "Favorites"
+        },
+        {
+            "name": "Notifications",
+            "description": "Notifications"
+        },
+        {
+            "name": "Plans",
+            "description": "Plans"
+        },
+        {
+            "name": "Profile",
+            "description": "Profile"
+        },
+        {
+            "name": "Property",
+            "description": "Property"
+        },
+        {
+            "name": "Reports",
+            "description": "Reports"
+        },
+        {
+            "name": "Reviews",
+            "description": "Reviews"
+        },
+        {
+            "name": "Subscriptions",
+            "description": "Subscriptions"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
+        }
+    ]
+}
